@@ -1,7 +1,7 @@
 package org.pgl.mowerauto.dao;
 
 /**
- * THis marker interface indicate usable source to Mower application.
+ * This marker interface indicate usable source to Mower application.
  * */
 public interface DataSource {
 

@@ -11,7 +11,13 @@ public class Sequence {
     
     private List<Instruction> instructions;
     
-    public Mower getMower() {
+    public Sequence(Mower mower, List<Instruction> instructions) {
+		super();
+		this.mower = mower;
+		this.instructions = instructions;
+	}
+
+	public Mower getMower() {
         return mower;
     }
     

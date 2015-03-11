@@ -12,17 +12,18 @@ import org.pgl.mowerauto.entity.Operation;
 import org.pgl.mowerauto.entity.Sequence;
 import org.pgl.mowerauto.entity.State;
 
+//TODO comment
 public class OperationManagerImpl implements OperationManager {
 
-    private Dao dataSource;
+    private Dao dao;
     
     public OperationManagerImpl(){
-        dataSource = new DaoFileImpl();//TODO use factory or injection
+        dao = new DaoFileImpl();//TODO use factory or injection
     }
     
     @Override
     public Operation loadOperation(DataSource source) {
-        Operation operation = dataSource.getOperation(source);
+        Operation operation = dao.getOperation(source);
         return operation;
     }
 
@@ -66,9 +67,13 @@ public class OperationManagerImpl implements OperationManager {
             }
         }
         
-        State lastState = mower.getState();
-        
-        //TODO Indicate the final position.
+        displayState(mower);
+    }
+    
+    @Override
+    public void displayState(Mower mower) {
+    	// TODO Auto-generated method stub
+    	
     }
     
     /**
