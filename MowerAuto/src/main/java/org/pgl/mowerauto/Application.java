@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.pgl.mowerauto.business.OperationManager;
-import org.pgl.mowerauto.business.OperationManagerImpl;
+import org.pgl.mowerauto.business.MowerManager;
+import org.pgl.mowerauto.business.MowerManagerImpl;
 import org.pgl.mowerauto.dao.DataSource;
 import org.pgl.mowerauto.dao.DataSourceFile;
 import org.pgl.mowerauto.entity.Operation;
@@ -17,7 +17,7 @@ public class Application {
 
     public static void main(String[] args) {
 
-    	OperationManager operationManager = new OperationManagerImpl();
+    	MowerManager operationManager = new MowerManagerImpl();
 
     	
         //If none argument entered, the graphical user interface occurs.

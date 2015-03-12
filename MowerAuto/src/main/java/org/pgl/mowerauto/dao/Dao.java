@@ -7,11 +7,18 @@ import org.pgl.mowerauto.entity.Operation;
  * */
 public interface Dao {
 
+    /**
+     * To load a defined dataSource.
+     * 
+     * @param source The defined dataSource to load.
+     * @exception IncorrectDataSourceException If a source not matching is provided.
+     * */
+    void loadDataSource(DataSource source);
+    
 	/**
-	 * Get an operation from a data source.
+	 * Get an operation from the data source loaded.
 	 * 
-	 * @param source A data source object.
 	 * @return Operation provides by data source.
 	 * */
-    Operation getOperation(DataSource source);
+    Operation getOperation();
 }

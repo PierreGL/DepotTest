@@ -13,17 +13,17 @@ import org.pgl.mowerauto.entity.Sequence;
 import org.pgl.mowerauto.entity.State;
 
 //TODO comment
-public class OperationManagerImpl implements OperationManager {
+public class MowerManagerImpl implements MowerManager {
 
     private Dao dao;
     
-    public OperationManagerImpl(){
+    public MowerManagerImpl(){
         dao = new DaoFileImpl();//TODO use factory or injection
     }
     
     @Override
     public Operation loadOperation(DataSource source) {
-        Operation operation = dao.getOperation(source);
+        Operation operation = dao.getOperation();
         return operation;
     }
 
@@ -49,11 +49,13 @@ public class OperationManagerImpl implements OperationManager {
             switch(instruction){
                 case FORWARD:
                     State state = mower.presumeForward();
-                    if(isPossibleState(state, grass)){
-                        //TODO 
+                    if(!isPossibleState(state, grass)){
+                        //TODO WARN CASE OUT
                         mower.setState(state);
+                    }else if(false){
+                        //TODO WARN CASE CROSS MOWER (one mower go to other mower)
                     }else{
-                        //TODO WARN
+                        mower.setState(state);
                     }
                     break;
                 case RIGHT:
