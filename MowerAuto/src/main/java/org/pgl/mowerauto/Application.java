@@ -1,23 +1,40 @@
 package org.pgl.mowerauto;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.pgl.mowerauto.business.MowerManager;
 import org.pgl.mowerauto.business.MowerManagerImpl;
 import org.pgl.mowerauto.dao.DataSource;
 import org.pgl.mowerauto.dao.DataSourceFile;
-import org.pgl.mowerauto.entity.Operation;
 
 /**
  * The entry point of application.
  * */
 public class Application {
+	
+	public static ResourceBundle bundle;
 
     public static void main(String[] args) {
-
-    	MowerManager operationManager = new MowerManagerImpl();
+    	initConfig();
+    	launch(args);
+    }
+    
+    /**
+     * Initialize configuration of application.
+     * */
+    public static void initConfig(){
+    	Locale defLocale = Locale.FRANCE;
+    	Locale.setDefault(defLocale);
+		bundle = ResourceBundle.getBundle("ResourceBundle", defLocale);
+    }
+    
+    /**
+     * Launch the application.
+     * */
+    public static void launch(String[] args){
+    	MowerManager mowerManager = new MowerManagerImpl();
 
     	
         //If none argument entered, the graphical user interface occurs.
@@ -25,23 +42,13 @@ public class Application {
             //TODO petite appli graphique
         
         //If argumentS entered, they are treated as data file path to execute. 
-        }else{
-        	
-        	List<Operation> listOperationEntered = new ArrayList<>();
-        	
+        }else{	
         	for (String arg : args) {
         		File file = new File(arg);
-        		//TODO checker validiter du format du file
 				DataSource source = new DataSourceFile(file);
-	        	Operation operation = operationManager.loadOperation(source);
-	        	listOperationEntered.add(operation);
+	        	mowerManager.loadOperation(source);
+				mowerManager.execute();//Ne pas oublier la sortie : info mower
 			}
-        	
-        	for (Operation operation : listOperationEntered) {
-				operationManager.executeOperation(operation);//Ne pas oublier la sortie : info mower
-			}
-        	
-            //TODO Charger fichier correspondant a args[0] ...
         }
     }
 

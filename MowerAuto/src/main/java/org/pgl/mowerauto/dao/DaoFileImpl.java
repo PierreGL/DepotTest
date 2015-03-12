@@ -37,7 +37,7 @@ public class DaoFileImpl implements Dao {
     
     
     @Override
-    public Operation getOperation() {//TODO peut etre passer la source au moment de la creation du DAO
+    public Operation getOperation() {
 
         Operation result = null;
 
@@ -56,7 +56,7 @@ public class DaoFileImpl implements Dao {
 
             while(stateLine != null){//If position line is null, the file is terminated.
                 nbLine++;
-                State state = parseMowerStateLine(stateLine, nbLine);//TODO case where initial state out grass //TODO case where two mower are at same location
+                State state = parseMowerStateLine(stateLine, nbLine);
 
                 String instructionsLine = bfr.readLine();
                 if(instructionsLine != null){
@@ -69,8 +69,11 @@ public class DaoFileImpl implements Dao {
                     result.addSequence(sequence);
                 }else{//If there is not an instruction line while there is a position line, it is a problem
                     //TODO bundle
-                    throw new IncorrectDataFileFormatException("The mower defined at line "+nbLine+" has not instructions associated at next line.");
+                	String msg = String.format("The mower defined at line %s has not instructions associated at next line.", nbLine);
+                    throw new IncorrectDataFileFormatException(msg);
                 }
+                
+                stateLine = bfr.readLine();
             }
         } catch (FileNotFoundException fe) {
             fe.printStackTrace();//TODO to log
@@ -171,10 +174,9 @@ public class DaoFileImpl implements Dao {
      * */
     private List<Instruction> parseInstructionsLine(String instructionsLine, int nbLine) throws IncorrectDataFileFormatException {
         String regex = "[A,G,D]*";
-        
         Pattern p = Pattern.compile(regex);
         if(!p.matcher(instructionsLine).matches()){
-            String msg =  String.format("Format error at line [%s]. An instructionsLine has to be composed by set of character type of [A,G,D]", nbLine) ;
+            String msg =  String.format("Format error at line %s. An instructionsLine has to be composed by set of character type of [A,G,D]", nbLine) ;
             throw new IncorrectDataFileFormatException(msg);//TODO bundle
         }
         

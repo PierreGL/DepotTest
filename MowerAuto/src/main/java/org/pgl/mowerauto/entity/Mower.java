@@ -116,4 +116,11 @@ public class Mower {
     public int getId() {
         return id;
     }
+
+	@Override
+	public String toString() {
+		return "Mower [id=" + id + ", state=" + state + "]";
+	}
+    
+    
 }
