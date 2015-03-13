@@ -8,6 +8,7 @@ import org.pgl.mowerauto.business.MowerManager;
 import org.pgl.mowerauto.business.MowerManagerImpl;
 import org.pgl.mowerauto.dao.DataSource;
 import org.pgl.mowerauto.dao.DataSourceFile;
+import org.pgl.mowerauto.util.exception.FunctionnalException;
 
 /**
  * The entry point of application.
@@ -17,8 +18,12 @@ public class Application {
 	public static ResourceBundle bundle;
 
     public static void main(String[] args) {
-    	initConfig();
-    	launch(args);
+    	try {
+        	initConfig();
+        	launch(args);
+		} catch (FunctionnalException e) {
+			// TODO display console
+		}
     }
     
     /**

@@ -23,25 +23,19 @@ import org.pgl.mowerauto.util.exception.IncorrectDataSourceException;
  * This is the DAO implementation to data source file. 
  * */
 public class DaoFileImpl implements Dao {
-    
-    private DataSourceFile sourceFile;
-
+     
     @Override
-    public void loadDataSource(DataSource source) {
+    public Operation getOperation(DataSource source) {
+    	
         if(!(source instanceof DataSourceFile)){
             throw new IncorrectDataSourceException("An incorrect DataSource has been passed to DAO.");
         }
         
-        this.sourceFile = (DataSourceFile)source;
-    }
-    
-    
-    @Override
-    public Operation getOperation() {
+        DataSourceFile sourceFile = (DataSourceFile)source;
 
         Operation result = null;
 
-        File file = this.sourceFile.getFile();
+        File file = sourceFile.getFile();
         try(BufferedReader bfr = new BufferedReader(new FileReader(file))) {
 
             //Read the first line to define grass dimension.

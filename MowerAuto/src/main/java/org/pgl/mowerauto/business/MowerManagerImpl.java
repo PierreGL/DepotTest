@@ -35,8 +35,7 @@ public class MowerManagerImpl implements MowerManager {
     
     @Override
     public void loadOperation(DataSource source) {
-    	this.dao.loadDataSource(source);
-        Operation operation = this.dao.getOperation();
+        Operation operation = this.dao.getOperation(source);
         this.grass = operation.getGrass();
         this.occupiedStates = new ArrayList<>();
         List<Sequence> lstSequence = operation.getSequences();
