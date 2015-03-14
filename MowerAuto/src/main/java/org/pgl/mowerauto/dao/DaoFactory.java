@@ -3,19 +3,10 @@ package org.pgl.mowerauto.dao;
 /**
  * Provides DAO.
  * */
-public class DaoFactory {
+public interface DaoFactory {
 	
 	/**
 	 * Get an instance of DAO adapted to a type of source.
 	 * */
-	public Dao getDao(Dao.Type type){
-		if(Dao.Type.FILE.equals(type)){
-			return new DaoFileImpl();
-		}else{
-			
-		}
-		
-		return null;
-	}
-
+	public Dao getDao();
 }

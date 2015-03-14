@@ -14,9 +14,12 @@ public class Operation {
     private Grass grass;
     
     /**
-     * THe ordered sequences.
+     * The ordered sequences.
      * */
     private List<Sequence> sequences;
+    
+    public Operation(){
+    }
     
     public Operation(Grass grass){
         this.grass = grass;

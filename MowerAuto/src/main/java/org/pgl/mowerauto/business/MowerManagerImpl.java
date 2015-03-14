@@ -1,12 +1,13 @@
 package org.pgl.mowerauto.business;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import org.pgl.mowerauto.Application;
 import org.pgl.mowerauto.dao.Dao;
-import org.pgl.mowerauto.dao.DaoFileImpl;
+import org.pgl.mowerauto.dao.DaoFactory;
+import org.pgl.mowerauto.dao.DaoFactoryFile;
 import org.pgl.mowerauto.dao.DataSource;
 import org.pgl.mowerauto.entity.Grass;
 import org.pgl.mowerauto.entity.Instruction;
@@ -14,130 +15,110 @@ import org.pgl.mowerauto.entity.Mower;
 import org.pgl.mowerauto.entity.Operation;
 import org.pgl.mowerauto.entity.Sequence;
 import org.pgl.mowerauto.entity.State;
+import org.pgl.mowerauto.ui.UiManager;
+import org.pgl.mowerauto.util.exception.UnknownInstructionException;
+import org.pgl.mowerauto.util.exception.UtilsFormat;
 
 //TODO comment
 public class MowerManagerImpl implements MowerManager {
 
-    private Dao dao;
-    
-    private Grass grass;
-    
-    /**
-     * The set of waiting mowers, located on the grass.
-     * */
-    private Queue<Sequence> waitingSequences;
-    
-    private List<State> occupiedStates;
-    
-    public MowerManagerImpl(){
-        dao = new DaoFileImpl();//TODO use factory or injection
-    }
-    
-    @Override
-    public void loadOperation(DataSource source) {
-        Operation operation = this.dao.getOperation(source);
-        this.grass = operation.getGrass();
-        this.occupiedStates = new ArrayList<>();
-        List<Sequence> lstSequence = operation.getSequences();
-        this.waitingSequences = new ArrayBlockingQueue<>(lstSequence.size());//new ArrayList<>();
-        
-        for (Sequence sequence : lstSequence) {
-        	Mower newMower = sequence.getMower();
-        	State initialState = newMower.getState();
-        	if(isOccupiedState(initialState, this.occupiedStates)){//New mower cannot be located on other mower.
-        		//TODO display pb
-        	}else if(isStateOutsideGrass(initialState, operation.getGrass())){//New mower cannot be located outside the grass
-        		//TODO display pb
-        	}else{//The mower can be added on grass.
-    			this.waitingSequences.add(sequence);
-    			this.occupiedStates.add(initialState);		
-        	}
-		}
-    }
+	private Dao dao;
 
-    @Override
-    public void execute() { 	
-    	if(this.grass == null || this.occupiedStates == null || this.waitingSequences == null){
-    		throw new IllegalStateException("Probably the execute method has been called before loadOperation.");
-    	}
-    	
-        for (Sequence sequence : this.waitingSequences) {
-            executeSequence(this.grass, sequence);
-        }       
-    }
-    
-    private void executeSequence(Grass grass, Sequence sequence){
-        Mower mower = sequence.getMower();
-        
-        List<Instruction> instructions = sequence.getInstructions();
-        
-        for (Instruction instruction : instructions) {
-            switch(instruction){
-                case FORWARD:
-                    State state = mower.presumeForward();
-                    //Two business test : future state must not be out of grass or on occupied state.
-                    if(!isStateOutsideGrass(state, grass) && !isOccupiedState(state, this.occupiedStates)){
-                        mower.setState(state);
-                    }
-                    break;
-                case RIGHT:
-                    mower.turnRight();
-                    break;
-                case LEFT:
-                    mower.turnLeft();
-                    break;
-                default:
-                    throw new RuntimeException("Unknown instruction.");//TODO creer ses propres exceptions
-            }
-        }
-        //TODO update waiting mower
-        displayState(mower);
-    }
-    
-    private void displayState(Mower mower) {
-    	// TODO Auto-generated method stub
-    	System.out.println(mower.getState());
-    	
-    }
-    
-    /**
-     * Check if the state of a mower is outside the defined grass.
-     * 
-     * @param state The presumed state.
-     * @param grass The defined grass.
-     * @return If the state is outside return true, else return false.
-     * */
-    private boolean isStateOutsideGrass(State state, Grass grass){
-        
-        if(state.getPositionY() > grass.getLength()){
-            return true;
-        }else if(state.getPositionY() < 0){
-            return true;
-        }else if(state.getPositionX() > grass.getWidth() ){
-            return true;
-        }else if(state.getPositionX() < 0){
-            return true;
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Check if a defined presumed state matches at case already occupied by other mower.
-     * 
-     * @param presumedState The presumed state.
-     * @param states List of occupied state on the grass.
-     * @return If the presumed state matches at least one state, then return true.
-     * */
-    private boolean isOccupiedState(State presumedState, List<State> states){
-    	
-    	for (State state : states) {
-			if(presumedState.equalsPosition(state)){
-				return true;
+	private Grass grass;
+
+	/**
+	 * The set of waiting mowers, located on the grass.
+	 * */
+	private Queue<Sequence> waitingSequences;
+
+	public MowerManagerImpl(){
+		DaoFactory factory = new DaoFactoryFile();
+		this.dao = factory.getDao();
+	}
+
+	@Override
+	public void loadOperation(DataSource source) {
+		Operation operation = this.dao.getOperation(source);
+		
+		this.grass = operation.getGrass();
+		List<Sequence> lstSequence = operation.getSequences();
+		this.waitingSequences = new ArrayBlockingQueue<>(lstSequence.size());//new ArrayList<>();
+
+		for (Sequence sequence : lstSequence) {
+			Mower newMower = sequence.getMower();
+			State initialState = newMower.getState();
+
+			if(this.grass.isOutsideState(initialState)){//New mower cannot be located outside the grass
+				String msg = String.format(Application.bundle.getString("MSG_INITIAL_OUT"), newMower.getId());
+				UiManager.display(msg);
+			}else if(this.grass.isOccupiedState(initialState)){//New mower cannot be located on other mower.
+				String msg = String.format(Application.bundle.getString("MSG_INITIAL_OCCUPIED"), newMower.getId());
+				UiManager.display(msg);
+			}else{//The mower can be added on grass.
+				this.waitingSequences.add(sequence);
+				this.grass.addOccupiedState(initialState);		
 			}
 		}
-    	
-    	return false;
-    }
+	}
+
+	@Override
+	public void executeOperation() { 	
+		if(this.grass == null || this.waitingSequences == null){
+			throw new IllegalStateException("Probably the execute method has been called before loadOperation.");
+		}
+
+		for (Sequence sequence : this.waitingSequences) {
+			Mower updatedMower = executeSequence(this.grass, sequence);
+			displayFinalState(updatedMower);
+		} 
+	}
+
+	@Override
+	public Mower executeSequence(Grass grass, Sequence sequence){
+		Mower mower = sequence.getMower();
+
+		List<Instruction> instructions = sequence.getInstructions();
+
+		for (Instruction instruction : instructions) {
+			switch(instruction){
+			case FORWARD:
+				State presumedState = mower.presumeForward();
+				//Two business test : future state must not be out of grass or on occupied state.
+				if(this.grass.isOutsideState(presumedState)){
+					String msg = String.format(Application.bundle.getString("MSG_MOVE_OUT"), mower.getId());
+					UiManager.display(msg);
+				}else if(this.grass.isOccupiedState(presumedState)){
+					String msg = String.format(Application.bundle.getString("MSG_MOVE_OCCUPIED"), mower.getId());
+					UiManager.display(msg);
+				}else{
+					this.grass.removeOccupiedState(mower.getState());//Remove the previous occupied state.
+					this.grass.addOccupiedState(presumedState);//Indicates new state is occupied.
+					mower.setState(presumedState);//Update mower state.
+				}
+				break;
+			case RIGHT:
+				mower.turnRight();
+				break;
+			case LEFT:
+				mower.turnLeft();
+				break;
+			default:
+				throw new UnknownInstructionException();
+			}
+		}
+		return mower;
+	}
+	
+	@Override
+	public void displayFinalState(Mower mower) {
+		String msg = UtilsFormat.formatMsgFinalLocation(mower);
+		UiManager.display(msg);		
+	}
+
+	@Override
+	public void setDao(Dao dao) {
+		this.dao = dao;
+	}
+	
 
 }

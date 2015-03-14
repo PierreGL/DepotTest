@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.pgl.mowerauto.dao.Dao;
 import org.pgl.mowerauto.dao.DaoFactory;
+import org.pgl.mowerauto.dao.DaoFactoryFile;
 import org.pgl.mowerauto.dao.DataSourceFile;
 import org.pgl.mowerauto.entity.Grass;
 import org.pgl.mowerauto.entity.Instruction;
@@ -25,8 +26,8 @@ public class TestDaoFileImpl {
 	private Dao dao;
 
 	public TestDaoFileImpl() {
-		DaoFactory factory = new DaoFactory();
-		dao = factory.getDao(Dao.Type.FILE);
+		DaoFactory factory = new DaoFactoryFile();
+		dao = factory.getDao();
 	}
 
 	/**

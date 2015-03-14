@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.pgl.mowerauto.Application;
 import org.pgl.mowerauto.entity.Grass;
 import org.pgl.mowerauto.entity.Instruction;
 import org.pgl.mowerauto.entity.Mower;
@@ -24,6 +25,12 @@ import org.pgl.mowerauto.util.exception.IncorrectDataSourceException;
  * */
 public class DaoFileImpl implements Dao {
      
+	/**
+	 * Default scope to protect access. To instanciate Dao impl, use DaoFactory.
+	 * */
+	DaoFileImpl() {
+	}
+	
     @Override
     public Operation getOperation(DataSource source) {
     	
@@ -62,17 +69,16 @@ public class DaoFileImpl implements Dao {
                     Sequence sequence = new Sequence(newMower, instructions);
                     result.addSequence(sequence);
                 }else{//If there is not an instruction line while there is a position line, it is a problem
-                    //TODO bundle
-                	String msg = String.format("The mower defined at line %s has not instructions associated at next line.", nbLine);
+                	String msg = String.format(Application.bundle.getString("MSG_FORMAT_MISSING_INSTRUCTION"), nbLine);
                     throw new IncorrectDataFileFormatException(msg);
                 }
                 
                 stateLine = bfr.readLine();
             }
         } catch (FileNotFoundException fe) {
-            fe.printStackTrace();//TODO to log
+            fe.printStackTrace();
         } catch (IOException ie) {
-            ie.printStackTrace();//TODO to log
+            ie.printStackTrace();
         }
 
         return result;
@@ -86,11 +92,11 @@ public class DaoFileImpl implements Dao {
      * @exception IncorrectDataFileFormatException thrown if header line has incorrect format.
      * */
     private Grass parseHeaderLine(String headerLine) throws IncorrectDataFileFormatException{
-        String regex = "\\d \\d";
+        String regex = "[0-9]+ [0-9]+";
         Pattern p = Pattern.compile(regex);
         if(!p.matcher(headerLine).matches()){
-            String msg =  String.format("Format error at first line. The line has to be composed by 2 numbers.") ;
-            throw new IncorrectDataFileFormatException(msg);//TODO bundle
+            String msg =  String.format(Application.bundle.getString("MSG_FORMAT_ERROR_HEADER")) ;
+            throw new IncorrectDataFileFormatException(msg);
         }
 
         String[] headerLineArray = headerLine.split(" ");
@@ -114,12 +120,12 @@ public class DaoFileImpl implements Dao {
      * @exception IncorrectDataFileFormatException thrown if state line has incorrect format.
      * */
     private State parseMowerStateLine(String mowerStateLine, int nbLine) throws IncorrectDataFileFormatException {
-        String regex = "\\d \\d [N,S,E,W]";
+        String regex = "[0-9]+ [0-9]+ [N,S,E,W]";
 
         Pattern p = Pattern.compile(regex);
         if(!p.matcher(mowerStateLine).matches()){
-            String msg =  String.format("Format error at line [%s]. A mower state line has to be composed by two number and one character type of [N,S,E,W]", nbLine) ;
-            throw new IncorrectDataFileFormatException(msg);//TODO bundle
+            String msg =  String.format(Application.bundle.getString("MSG_FORMAT_ERROR_STATE_LINE"), nbLine) ;
+            throw new IncorrectDataFileFormatException(msg);
         }
 
         String[] mowerStateLineArray = mowerStateLine.split(" ");
@@ -148,9 +154,7 @@ public class DaoFileImpl implements Dao {
                 orient = Orientation.SOUTH;
                 break;
             default:
-                //TODO bundle
-                String msg = String.format("Format error at line [%s]. The third element in a mower state line has to be N S W or E.", nbLine);
-                throw new IncorrectDataFileFormatException(msg);
+                throw new IncorrectDataFileFormatException();
         }
 
         result = new State(orient, abs, ord);
@@ -167,11 +171,11 @@ public class DaoFileImpl implements Dao {
      * @exception IncorrectDataFileFormatException thrown if instructions line has incorrect format.
      * */
     private List<Instruction> parseInstructionsLine(String instructionsLine, int nbLine) throws IncorrectDataFileFormatException {
-        String regex = "[A,G,D]*";
+        String regex = "[A,G,D]+";
         Pattern p = Pattern.compile(regex);
         if(!p.matcher(instructionsLine).matches()){
-            String msg =  String.format("Format error at line %s. An instructionsLine has to be composed by set of character type of [A,G,D]", nbLine) ;
-            throw new IncorrectDataFileFormatException(msg);//TODO bundle
+            String msg =  String.format(Application.bundle.getString("MSG_FORMAT_ERROR_INSTR_LINE"), nbLine) ;
+            throw new IncorrectDataFileFormatException(msg);
         }
         
         char[] instructionsArray = instructionsLine.toCharArray();
@@ -189,8 +193,7 @@ public class DaoFileImpl implements Dao {
                     instructionList.add(Instruction.RIGHT);
                     break;
                 default:
-                    String msg =  String.format("Format error at line [%s]. An the instrcutions has to be defined by character type of [A,G,D]", nbLine) ;
-                    throw new IncorrectDataFileFormatException(msg);//TODO bundle
+                    throw new IncorrectDataFileFormatException();
             }
         }
 

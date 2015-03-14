@@ -6,12 +6,12 @@ package org.pgl.mowerauto.entity;
  * */
 public class Mower {
     
-    private static int nbMower = 0;
+    protected static int nbMower = 0;
     
     /**
      * The id of mower.
      * */
-    private int id;
+    protected int id;
 
     /**
      * Actual state of mower.
@@ -119,7 +119,7 @@ public class Mower {
 
 	@Override
 	public String toString() {
-		return "Mower [id=" + id + ", state=" + state + "]";
+		return "Mower nb "+id+" : " + state + "]";
 	}
     
     

@@ -51,7 +51,7 @@ public class State {
 
 	@Override
 	public String toString() {
-		return "State [orientation=" + orientation + ", positionX=" + positionX
+		return "[orientation=" + orientation + ", positionX=" + positionX
 				+ ", positionY=" + positionY + "]";
 	}
     
