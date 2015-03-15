@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.pgl.mowerauto.Application;
 import org.pgl.mowerauto.dao.Dao;
 import org.pgl.mowerauto.dao.DaoFactory;
@@ -16,11 +18,15 @@ import org.pgl.mowerauto.entity.Operation;
 import org.pgl.mowerauto.entity.Sequence;
 import org.pgl.mowerauto.entity.State;
 import org.pgl.mowerauto.ui.UiManager;
+import org.pgl.mowerauto.util.UtilsFormat;
 import org.pgl.mowerauto.util.exception.UnknownInstructionException;
-import org.pgl.mowerauto.util.exception.UtilsFormat;
 
-//TODO comment
+/**
+ * Implementation of business logic.
+ * */
 public class MowerManagerImpl implements MowerManager {
+	
+	private static Logger logger = LogManager.getLogger(MowerManagerImpl.class);
 
 	private Dao dao;
 
@@ -59,10 +65,14 @@ public class MowerManagerImpl implements MowerManager {
 				this.grass.addOccupiedState(initialState);		
 			}
 		}
+		
+		logger.info("Data Source loaded");
 	}
 
 	@Override
-	public void executeOperation() { 	
+	public void executeOperation() { 
+		logger.info("Execute loaded operation.");
+
 		if(this.grass == null || this.waitingSequences == null){
 			throw new IllegalStateException("Probably the execute method has been called before loadOperation.");
 		}

@@ -18,8 +18,8 @@ import org.pgl.mowerauto.entity.Mower;
 import org.pgl.mowerauto.entity.State;
 import org.pgl.mowerauto.entity.test.MockMower;
 import org.pgl.mowerauto.ui.UiManager;
-import org.pgl.mowerauto.ui.test.UiMock;
-import org.pgl.mowerauto.util.exception.UtilsFormat;
+import org.pgl.mowerauto.ui.UiMock;
+import org.pgl.mowerauto.util.UtilsFormat;
 
 /**
  * Unit tests to business logic.

@@ -1,5 +1,7 @@
 package org.pgl.mowerauto.entity;
 
+import org.pgl.mowerauto.util.exception.UnknownOrientationException;
+
 
 /**
  * Abstract representation of A mower.
@@ -51,7 +53,7 @@ public class Mower {
                 actualY--;
                 break;
             default:
-                throw new RuntimeException("Unknown orientation");//TODO creer ses propres exceptions
+                throw new UnknownOrientationException();
         }
         
         result = new State(orientation, actualX, actualY);
@@ -78,7 +80,7 @@ public class Mower {
                 state.setOrientation(Orientation.EAST);
                 break;
             default:
-                throw new RuntimeException("Unknown orientation");//TODO creer ses propres exceptions
+                throw new UnknownOrientationException();
         }
     }
     
@@ -101,7 +103,7 @@ public class Mower {
                 state.setOrientation(Orientation.WEST);
                 break;
             default:
-                throw new RuntimeException("Unknown orientation");//TODO creer ses propres exceptions
+                throw new UnknownOrientationException();
         }
     }
     

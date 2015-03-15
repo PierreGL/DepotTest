@@ -54,8 +54,4 @@ public class State {
 		return "[orientation=" + orientation + ", positionX=" + positionX
 				+ ", positionY=" + positionY + "]";
 	}
-    
-    
-    
-    
 }

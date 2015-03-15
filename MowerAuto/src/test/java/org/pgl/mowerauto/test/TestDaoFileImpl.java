@@ -22,6 +22,16 @@ import org.pgl.mowerauto.entity.State;
  * Unit tests to DaoFile implementation. 
  * */
 public class TestDaoFileImpl {
+	
+	public final String VALID_FILE_NAME = "/validFile.txt";
+	public final String INVALID_FILE_HEADER_TYPE = "/invalidFileHeaderType.txt";
+	public final String INVALID_FILE_HEADER_NB = "/invalidFileHeaderNumber.txt";
+	public final String INVALID_FILE_HEADER_STRUCT = "/invalidFileHeaderStructure.txt";
+	public final String INVALID_FILE_STATE_NB = "/invalidFileStateNumber.txt";
+	public final String INVALID_FILE_STATE_TYPE = "/invalidFileStateType.txt";
+	public final String INVALID_FILE_STATE_OR = "/invalidFileStateOrient.txt";
+	public final String INVALID_FILE_INSTR_MISS = "/invalidFileInstructionsMissing.txt";
+	public final String INVALID_FILE_INSTR_TYPE = "/invalidFileInstructionsType.txt";
 
 	private Dao dao;
 
@@ -35,7 +45,7 @@ public class TestDaoFileImpl {
 	 * */
 	@Test
 	public void testGetOperation(){
-		URL url = getClass().getResource("/validFile.txt");
+		URL url = getClass().getResource(VALID_FILE_NAME);
 		String path = url.getPath();
 
 		File file = new File(path);
@@ -76,7 +86,7 @@ public class TestDaoFileImpl {
 		boolean exceptionFound = false;
 
 		try {
-			this.attemptGetOperation("/invalidFileHeaderType.txt");
+			this.attemptGetOperation(INVALID_FILE_HEADER_TYPE);
 		} catch (Exception e) {
 			exceptionFound = true;
 		}
@@ -92,7 +102,7 @@ public class TestDaoFileImpl {
 		boolean exceptionFound = false;
 
 		try {
-			this.attemptGetOperation("/invalidFileHeaderNumber.txt");
+			this.attemptGetOperation(INVALID_FILE_HEADER_NB);
 		} catch (Exception e) {
 			exceptionFound = true;
 		}
@@ -108,7 +118,7 @@ public class TestDaoFileImpl {
 		boolean exceptionFound = false;
 
 		try {
-			this.attemptGetOperation("/invalidFileHeaderStructure.txt");
+			this.attemptGetOperation(INVALID_FILE_HEADER_STRUCT);
 		} catch (Exception e) {
 			exceptionFound = true;
 		}
@@ -124,7 +134,7 @@ public class TestDaoFileImpl {
 		boolean exceptionFound = false;
 
 		try {
-			this.attemptGetOperation("/invalidFileStateNumber.txt");
+			this.attemptGetOperation(INVALID_FILE_STATE_NB);
 		} catch (Exception e) {
 			exceptionFound = true;
 		}
@@ -140,7 +150,7 @@ public class TestDaoFileImpl {
 		boolean exceptionFound = false;
 
 		try {
-			this.attemptGetOperation("/invalidFileStateType.txt");
+			this.attemptGetOperation(INVALID_FILE_STATE_TYPE);
 		} catch (Exception e) {
 			exceptionFound = true;
 		}
@@ -156,7 +166,7 @@ public class TestDaoFileImpl {
 		boolean exceptionFound = false;
 
 		try {
-			this.attemptGetOperation("/invalidFileStateOrient.txt");
+			this.attemptGetOperation(INVALID_FILE_STATE_OR);
 		} catch (Exception e) {
 			exceptionFound = true;
 		}
@@ -175,7 +185,7 @@ public class TestDaoFileImpl {
 		boolean exceptionFound = false;
 
 		try {
-			this.attemptGetOperation("/invalidFileInstructionsMissing.txt");
+			this.attemptGetOperation(INVALID_FILE_INSTR_MISS);
 		} catch (Exception e) {
 			exceptionFound = true;
 		}
@@ -191,7 +201,7 @@ public class TestDaoFileImpl {
 		boolean exceptionFound = false;
 
 		try {
-			this.attemptGetOperation("/invalidFileInstructionsType.txt");
+			this.attemptGetOperation(INVALID_FILE_INSTR_TYPE);
 		} catch (Exception e) {
 			exceptionFound = true;
 		}
@@ -210,7 +220,7 @@ public class TestDaoFileImpl {
 
 		File file = new File(path);
 		DataSourceFile sourceFile = new DataSourceFile(file);
-		dao.getOperation(sourceFile);
+		this.dao.getOperation(sourceFile);
 	}
 
 }

@@ -1,12 +1,10 @@
-package org.pgl.mowerauto.ui.test;
+package org.pgl.mowerauto.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.pgl.mowerauto.ui.UiOuput;
-
 /**
- * The specific UI console cannot be displayed during test, then it is replaced by simple System.out.
+ * The specific UI console cannot be displayed during test, this UiMock allows to replace standard console.
  * */
 public class UiMock implements UiOuput {
 	private List<String> displayedMessages;
@@ -27,12 +25,10 @@ public class UiMock implements UiOuput {
 	@Override
 	public void display(String msg) {
 		displayedMessages.add(msg);
-		System.out.println(msg);
 	}
 
 	@Override
 	public String displayAndWait(String msg) {
-		System.out.println(msg);
 		return msg;
 	}
 	
@@ -49,7 +45,5 @@ public class UiMock implements UiOuput {
 	public List<String> getDisplayedMessages() {
 		return displayedMessages;
 	}
-	
-
 
 }

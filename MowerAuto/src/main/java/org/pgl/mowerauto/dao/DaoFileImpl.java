@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.pgl.mowerauto.Application;
 import org.pgl.mowerauto.entity.Grass;
 import org.pgl.mowerauto.entity.Instruction;
@@ -17,6 +19,7 @@ import org.pgl.mowerauto.entity.Operation;
 import org.pgl.mowerauto.entity.Orientation;
 import org.pgl.mowerauto.entity.Sequence;
 import org.pgl.mowerauto.entity.State;
+import org.pgl.mowerauto.util.exception.FunctionnalException;
 import org.pgl.mowerauto.util.exception.IncorrectDataFileFormatException;
 import org.pgl.mowerauto.util.exception.IncorrectDataSourceException;
 
@@ -24,6 +27,8 @@ import org.pgl.mowerauto.util.exception.IncorrectDataSourceException;
  * This is the DAO implementation to data source file. 
  * */
 public class DaoFileImpl implements Dao {
+	
+	private static Logger logger = LogManager.getLogger(DaoFileImpl.class);
      
 	/**
 	 * Default scope to protect access. To instanciate Dao impl, use DaoFactory.
@@ -40,9 +45,24 @@ public class DaoFileImpl implements Dao {
         
         DataSourceFile sourceFile = (DataSourceFile)source;
 
-        Operation result = null;
-
         File file = sourceFile.getFile();
+        Operation result = parseFile(file);
+
+        return result;
+    }
+    
+    /**
+     * This method parse a complete file to get the matching operation.
+     * 
+     * @param file The file object.
+     * @return The Operation described by file.
+     * @exception IncorrectDataFileFormatException thrown if the file has an incorrect format.
+     * */
+    private Operation parseFile(File file)throws IncorrectDataFileFormatException {
+    	logger.debug("Parsing file starting.");
+    	
+        Operation result = null;
+    	
         try(BufferedReader bfr = new BufferedReader(new FileReader(file))) {
 
             //Read the first line to define grass dimension.
@@ -76,13 +96,13 @@ public class DaoFileImpl implements Dao {
                 stateLine = bfr.readLine();
             }
         } catch (FileNotFoundException fe) {
-            fe.printStackTrace();
+            throw new FunctionnalException(fe);
         } catch (IOException ie) {
-            ie.printStackTrace();
+        	logger.error(ie);
         }
-
+        
         return result;
-    }
+	}
 
     /**
      * This method parse the header line which contains grass dimension and provide grass object.

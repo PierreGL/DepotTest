@@ -1,6 +1,10 @@
 package org.pgl.mowerauto.ui;
 
+/**
+ * Defined the expected methods to the user interface output object.
+ * */
 public interface UiOuput {
+	
 	/**
 	 * Display a message to user.
 	 * */
