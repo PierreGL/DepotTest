@@ -5,7 +5,7 @@ package org.pgl.mowerauto.util.exception;
  * */
 public class TechnicalException extends RuntimeException {
 
-	private static final long serialVersionUID = 383484433381996446L;
+    private static final long serialVersionUID = 383484433381996446L;
 
     public TechnicalException() {
         super();

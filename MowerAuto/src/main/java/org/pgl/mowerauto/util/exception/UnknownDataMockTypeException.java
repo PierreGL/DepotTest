@@ -2,9 +2,9 @@ package org.pgl.mowerauto.util.exception;
 
 public class UnknownDataMockTypeException extends TechnicalException {
 
-	private static final long serialVersionUID = 4310943985234804107L;
+    private static final long serialVersionUID = 4310943985234804107L;
 
-	public UnknownDataMockTypeException() {
+    public UnknownDataMockTypeException() {
         super();
     }
 

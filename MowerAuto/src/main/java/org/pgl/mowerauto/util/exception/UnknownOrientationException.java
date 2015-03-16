@@ -2,9 +2,9 @@ package org.pgl.mowerauto.util.exception;
 
 public class UnknownOrientationException extends TechnicalException {
 
-	private static final long serialVersionUID = 605683840071003621L;
+    private static final long serialVersionUID = 605683840071003621L;
 
-	public UnknownOrientationException() {
+    public UnknownOrientationException() {
         super();
     }
 

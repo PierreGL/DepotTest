@@ -10,35 +10,35 @@ import org.pgl.mowerauto.entity.Sequence;
  * Interface defining the business logic concerning the mowers.
  * */
 public interface MowerManager {
-    
-	/**
-	 * Load an operation from a datasource.
-	 * */
+
+    /**
+     * Load an operation from a datasource.
+     * */
     void loadOperation(DataSource source);
-    
+
     /**
      * Execute the last loaded operation.
      * 
      * @exception IllegalStateException if execute is called before loadOperation.
      * */
     void executeOperation();
-    
-	/**
-	 * Execute a sequence and when finish, returns the Mower with updated state.
-	 * 
-	 * @param grass The grass.
-	 * @param The sequence concerned.
-	 * @return The mower updated.
-	 * */
+
+    /**
+     * Execute a sequence and when finish, returns the Mower with updated state.
+     * 
+     * @param grass The grass.
+     * @param The sequence concerned.
+     * @return The mower updated.
+     * */
     Mower executeSequence(Grass grass, Sequence sequence);
-    
+
     /**
      * To display to user the final state of a mower.
      * 
      * @param mower The defined mower.
      * */
     void displayFinalState(Mower mower);
-    
+
     /**
      * To set a new dao.
      * */

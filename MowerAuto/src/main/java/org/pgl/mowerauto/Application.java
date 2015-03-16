@@ -1,11 +1,8 @@
 package org.pgl.mowerauto;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pgl.mowerauto.business.MowerManager;
@@ -21,84 +18,63 @@ import org.pgl.mowerauto.util.exception.FunctionnalException;
  * */
 public class Application {
 
-	private static Logger logger = LogManager.getLogger(Application.class);
+    private static final Logger LOGGER = LogManager.getLogger(Application.class);
 
-	public static ResourceBundle bundle;
+    private ResourceBundle bundle;
 
-	public static void main(String[] args) {
-		new Application(args);
-	}
+    private UiManager uiManager;
 
-	public Application(String[] args){
-		init();
-		launch(args);
-	}
+    public Application(){
+        init();
+    }
 
-	/**
-	 * Initialize application.
-	 * */
-	private void init(){
-		initConfig();
-		initConsole();
-		logger.info("MowerAuto initialized");
-	}
+    public static void main(String[] args) {
+        Application appli = new Application();
+        appli.launch(args);
+    }
 
-	/**
-	 * Initialize configuration and bundle.
-	 * */
-	private void initConfig(){
-		Properties config = new Properties();
-		InputStream is = getClass().getResourceAsStream("/config.properties");
-		try {
-			config.load(is);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    /**
+     * Initialize application.
+     * */
+    private void init(){
+        initConsole();
+        LOGGER.info("MowerAuto initialized");
+    }
 
-		Locale locale;
-		String localeCode = config.getProperty("LOCALE");
+    /**
+     * Initialize user console.
+     * */
+    private void initConsole(){
+        uiManager = UiManager.getInstance();
+        uiManager.setOutput(UiConsole.getInstance());
+    }
 
-		if(localeCode != null){
-			locale = new Locale(localeCode);
-		}else{
-			locale = Locale.getDefault();
-			Locale.setDefault(locale);
-		}
+    /**
+     * Launch the application.
+     * */
+    private void launch(String[] args){
+        MowerManager mowerManager = new MowerManagerImpl();
 
-		bundle = ResourceBundle.getBundle("ResourceBundle", locale);
-	}
+        //If none argument entered, a message is displayed.
+        if(args.length > 0){
+            String path = args[0];
+            try {
+                File file = new File(path);
+                DataSource source = new DataSourceFile(file);
+                mowerManager.loadOperation(source);
+                mowerManager.executeOperation();
+            } catch (FunctionnalException fe) {
+                LOGGER.error(fe);
+                uiManager.display(fe.getMessage());
+            }
+        }else {
+            uiManager.display(bundle.getString("MSG_NO_PATH"));
+        }
 
-	/**
-	 * Initialize user console.
-	 * */
-	private void initConsole(){
-		new UiManager(UiConsole.getInstance());
-	}
-
-	/**
-	 * Launch the application.
-	 * */
-	private void launch(String[] args){
-		MowerManager mowerManager = new MowerManagerImpl();
-
-		//If none argument entered, a message is displayed.
-		if(args.length > 0){
-			String path = args[0];
-			try {
-				File file = new File(path);
-				DataSource source = new DataSourceFile(file);
-				mowerManager.loadOperation(source);
-				mowerManager.executeOperation();
-			} catch (FunctionnalException fe) {
-				logger.error(fe);
-				UiManager.display(fe.getMessage());
-			}
-		}else {
-			UiManager.display(bundle.getString("MSG_NO_PATH"));
-		}
-
-		String str = UiManager.displayAndWait(bundle.getString("MSG_ENTER_PATH"));
-		launch(new String[]{str});
-	}
+        String entered = uiManager.displayAndWait(bundle.getString("MSG_ENTER_PATH"));
+        if(!"q".equalsIgnoreCase(entered)){//If the user enter Q, the program is terminating, else relaunch the program on entered string. 
+            launch(new String[]{entered});
+        }
+    }
 
 }

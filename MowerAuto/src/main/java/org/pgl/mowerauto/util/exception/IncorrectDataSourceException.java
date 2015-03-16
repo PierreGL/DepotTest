@@ -5,7 +5,7 @@ package org.pgl.mowerauto.util.exception;
  * */
 public class IncorrectDataSourceException extends TechnicalException {
 
-	private static final long serialVersionUID = -978934525219609536L;
+    private static final long serialVersionUID = -978934525219609536L;
 
     public IncorrectDataSourceException() {
         super();

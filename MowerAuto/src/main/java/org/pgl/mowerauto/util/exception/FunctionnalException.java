@@ -1,14 +1,13 @@
 package org.pgl.mowerauto.util.exception;
 
 /**
- * 
  * Exception thrown in case of wrong usage of program by user.
  * */
 public class FunctionnalException extends RuntimeException {
-	
-	private static final long serialVersionUID = -2747789781585106245L;
 
-	public FunctionnalException() {
+    private static final long serialVersionUID = -2747789781585106245L;
+
+    public FunctionnalException() {
         super();
     }
 

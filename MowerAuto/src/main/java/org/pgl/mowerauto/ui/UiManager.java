@@ -2,52 +2,56 @@ package org.pgl.mowerauto.ui;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.pgl.mowerauto.Application;
 
 /**
  * To manager the user interface. 
  * */
 public class UiManager {
 
-	private static Logger logger = LogManager.getLogger(UiManager.class);
+    private static final Logger LOGGER = LogManager.getLogger(UiManager.class);
 
-	private static UiOuput out;
+    private UiOuput output;
 
-	public UiManager(UiOuput output){
-		out = output;
-	}
+    private static UiManager instance;
 
-	/**
-	 * Displays a message to user.
-	 * 
-	 * @param msg The message.
-	 * */
-	public static void display(String msg){
-		if(logger.isDebugEnabled()){
-			logger.debug("Display : \""+msg+"\"");
-		}		
+    private UiManager(){
+    }
 
-		out.display(msg);
-	}
+    public static synchronized UiManager getInstance(){
+        if(instance == null){
+            instance = new UiManager();
+        }
+        return instance;
+    }
 
-	/**
-	 * Displays a message to user and wait response.
-	 * 
-	 * @param msg The message.
-	 * @return The response from user.
-	 * */
-	public static String displayAndWait(String msg){
-		logger.info("Display : \""+msg+"\"");
-		logger.info("wait...");
+    /**
+     * Displays a message to user.
+     * 
+     * @param msg The message.
+     * */
+    public void display(String msg){
+        if(LOGGER.isDebugEnabled()){
+            LOGGER.debug("Display : \""+msg+"\"");
+        }		
 
-		String response = out.displayAndWait(msg);
-		if("q".equalsIgnoreCase(response)){
-			display(Application.bundle.getString("MSG_QUIT"));
-			System.exit(0);
-		}
+        output.display(msg);
+    }
 
-		logger.info("The user entered : \""+response+"\"");
-		return response;
-	}
+    /**
+     * Displays a message to user and wait response.
+     * 
+     * @param msg The message.
+     * @return The response from user.
+     * */
+    public String displayAndWait(String msg){
+        LOGGER.info("Display : \""+msg+"\"");
+        LOGGER.info("wait...");
+        String response = output.displayAndWait(msg);
+        LOGGER.info("The user entered : \""+response+"\"");
+        return response;
+    }
 
+    public void setOutput(UiOuput output) {
+        this.output = output;
+    }
 }

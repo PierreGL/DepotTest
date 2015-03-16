@@ -1,22 +1,28 @@
 package org.pgl.mowerauto.util;
 
-import org.pgl.mowerauto.Application;
 import org.pgl.mowerauto.entity.Mower;
 import org.pgl.mowerauto.entity.State;
 
 public class UtilsFormat {
+    
+    private UtilsFormat() {
+    }
 
-	/**
-	 * Method to provides final location formatted message from a mower.
-	 * 
-	 * @param mower The defined mower.
-	 * @return Formatted message concerning final location.
-	 * */
-	public static String formatMsgFinalLocation(Mower mower){
-		State state = mower.getState();
-		String orient = Application.bundle.getString(state.getOrientation().name());
-		String msg = String.format(Application.bundle.getString("MSG_FINAL_LOCATION"), 
-				mower.getId(), orient, state.getPositionX(), state.getPositionY());
-		return msg;
-	}
+    /**
+     * Method to provides final location formatted message from a mower.
+     * 
+     * @param mower The defined mower.
+     * @return Formatted message concerning final location.
+     * */
+    public static String formatMsgFinalLocation(Mower mower) {
+        Bundle bundle = Bundle.getInstance();
+        
+        State state = mower.getState();
+        String orient = bundle.get(state.getOrientation().name());
+
+        return String.format(
+                bundle.get("MSG_FINAL_LOCATION"),
+                mower.getId(), orient, state.getPositionX(),
+                state.getPositionY());
+    }
 }

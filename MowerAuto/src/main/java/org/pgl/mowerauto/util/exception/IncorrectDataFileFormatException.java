@@ -5,9 +5,9 @@ package org.pgl.mowerauto.util.exception;
  * */
 public class IncorrectDataFileFormatException extends FunctionnalException {
 
-	private static final long serialVersionUID = -8145173540370687798L;
+    private static final long serialVersionUID = -8145173540370687798L;
 
-	public IncorrectDataFileFormatException() {
+    public IncorrectDataFileFormatException() {
         super();
     }
 
