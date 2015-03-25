@@ -1,8 +1,6 @@
 package org.pgl.mowerauto;
 
 import java.io.File;
-import java.util.ResourceBundle;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pgl.mowerauto.business.MowerManager;
@@ -11,6 +9,7 @@ import org.pgl.mowerauto.dao.DataSource;
 import org.pgl.mowerauto.dao.DataSourceFile;
 import org.pgl.mowerauto.ui.UiConsole;
 import org.pgl.mowerauto.ui.UiManager;
+import org.pgl.mowerauto.util.Bundle;
 import org.pgl.mowerauto.util.exception.FunctionnalException;
 
 /**
@@ -20,7 +19,7 @@ public class Application {
 
     private static final Logger LOGGER = LogManager.getLogger(Application.class);
 
-    private ResourceBundle bundle;
+    private Bundle bundle;
 
     private UiManager uiManager;
 
@@ -37,6 +36,7 @@ public class Application {
      * Initialize application.
      * */
     private void init(){
+        this.bundle = Bundle.getInstance();
         initConsole();
         LOGGER.info("MowerAuto initialized");
     }
@@ -45,8 +45,8 @@ public class Application {
      * Initialize user console.
      * */
     private void initConsole(){
-        uiManager = UiManager.getInstance();
-        uiManager.setOutput(UiConsole.getInstance());
+        this.uiManager = UiManager.getInstance();
+        this.uiManager.setOutput(UiConsole.getInstance());
     }
 
     /**
@@ -65,13 +65,13 @@ public class Application {
                 mowerManager.executeOperation();
             } catch (FunctionnalException fe) {
                 LOGGER.error(fe);
-                uiManager.display(fe.getMessage());
+                this.uiManager.display(fe.getMessage());
             }
         }else {
-            uiManager.display(bundle.getString("MSG_NO_PATH"));
+            this.uiManager.display(this.bundle.get("MSG_NO_PATH"));
         }
 
-        String entered = uiManager.displayAndWait(bundle.getString("MSG_ENTER_PATH"));
+        String entered = this.uiManager.displayAndWait(this.bundle.get("MSG_ENTER_PATH"));
         if(!"q".equalsIgnoreCase(entered)){//If the user enter Q, the program is terminating, else relaunch the program on entered string. 
             launch(new String[]{entered});
         }

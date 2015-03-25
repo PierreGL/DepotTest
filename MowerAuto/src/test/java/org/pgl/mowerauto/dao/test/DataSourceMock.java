@@ -25,7 +25,9 @@ public class DataSourceMock implements DataSource {
 	}
 
 	/**
-	 * Provide an operation object according to a mockType.
+	 * Provide an operation object according to the current mockType.
+	 * 
+	 * @return Return the matching operation.
 	 * */
 	public Operation provideOperation() {
 		Operation result;

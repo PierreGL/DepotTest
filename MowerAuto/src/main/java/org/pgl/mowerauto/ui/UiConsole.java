@@ -16,7 +16,7 @@ public class UiConsole implements UiOuput {
     private static UiConsole instance;
 
     private UiConsole(){
-        this.console = System. console();
+        this.console = System.console();
 
         //If there already console used, return null.
         if(this.console == null){
